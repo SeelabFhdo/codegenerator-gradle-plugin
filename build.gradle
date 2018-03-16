@@ -1,0 +1,23 @@
+plugins {
+	id "java-gradle-plugin"
+	id "com.gradle.plugin-publish" version "0.9.8"
+}
+
+group 'de.seelab'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly 'org.projectlombok:lombok:1.16.20'
+	compile 'org.reflections:reflections:0.9.10'
+	compile 'commons-io:commons-io:2.6'
+	testCompile group: 'junit', name: 'junit', version: '4.12'
+	testCompile 'org.hamcrest:hamcrest-all:1.3'
+	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+}

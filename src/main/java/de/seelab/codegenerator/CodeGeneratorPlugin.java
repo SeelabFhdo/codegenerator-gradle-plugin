@@ -10,6 +10,7 @@ import org.reflections.Reflections;
 import org.reflections.scanners.ResourcesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
@@ -17,7 +18,9 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -41,14 +44,16 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 					if(codeGenerator.getGeneratorJars() == null) return;
 					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
-							return c.toURI().toURL();
+							return new File(project.getRootDir().getAbsolutePath(), c.getPath()).toURI().toURL();
 						} catch (MalformedURLException e) {
 							throw new RuntimeException(e);
 						}
 					}).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+					Collection<URL> reflectionUrls = new ArrayList<>(ClasspathHelper.forClassLoader(loader));
+					reflectionUrls.addAll(ClasspathHelper.forClassLoader(loader.getParent()));
 					Reflections reflections = new Reflections(new ConfigurationBuilder().addClassLoader(loader)
-							.addScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false), new ResourcesScanner()));
+							.addScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false)).setUrls(reflectionUrls));
 					Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(CodeGenerator.class);
 
 					ProjectContext context = new ProjectContext(project.getRootDir(), inputDir, outputDirFile);

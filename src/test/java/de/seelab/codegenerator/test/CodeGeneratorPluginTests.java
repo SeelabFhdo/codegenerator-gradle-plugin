@@ -50,7 +50,7 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 
 		try {
 			FileUtils.write(file, "plugins {\n" +
-					"   id 'CodeGenerator'\n" +
+					"   id 'de.seelab.CodeGenerator'\n" +
 					"   id 'java'\n" +
 					"}", "UTF-8");
 		} catch (IOException e) {

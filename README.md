@@ -6,6 +6,19 @@ This Gradle plugin offers a generic api for generating code at compile time with
 
 # Usage
 ```gradle
+plugins {
+  id 'java'
+  id 'de.seelab.CodeGenerator' version '0.1.2'
+}
+
+codeGenerator {
+  generatorJar 'libs/my-code-generator.jar'
+  generatorJar 'liby/my-second-code-generator.jar'
+}
+```
+
+## Old style: 
+```gradle
 buildscript {
   repositories {
     maven {
@@ -13,7 +26,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.github.SeelabFhdo:CodeGeneratorPlugin:0.1"
+    classpath "gradle.plugin.com.github.SeelabFhdo:CodeGeneratorPlugin:0.1.2"
   }
 }
 
@@ -21,7 +34,8 @@ apply plugin: "java"
 apply plugin: "de.seelab.CodeGenerator"
 
 codeGenerator {
-  generatorJars ['libs/my-code-generator.jar']
+  generatorJar 'libs/my-code-generator.jar'
+  generatorJar 'liby/my-second-code-generator.jar'
 }
 ```
 
@@ -34,6 +48,6 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.github.SeelabFhdo:codegenerator-gradle-plugin:0.1'
+  compile 'com.github.SeelabFhdo:codegenerator-gradle-plugin:0.1.2'
 }
 ```

@@ -7,7 +7,7 @@ This Gradle plugin offers a generic api for generating code at compile time with
 # Usage
 ```gradle
 plugins {
-  id 'de.seelab.CodeGenerator'
+  id "de.seelab.CodeGenerator" version "0.1"
 }
 
 codeGenerator {

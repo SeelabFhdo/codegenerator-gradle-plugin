@@ -13,6 +13,7 @@ import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -30,10 +31,14 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			String outputDir = project.getBuildDir() + "/generated-src/generator/" + s.getName();
 			File outputDirFile = new File(outputDir);
 			s.getJava().srcDir(outputDirFile);
+			File inputDir = new File(project.getRootDir() + "/src/code-generator/" + s.getName());
+			s.getJava().srcDir(inputDir);
 
 			String taskName = s.getTaskName("generate", "Code");
 			project.getTasks().create(taskName, t -> {
+				project.getTasks().getByName(s.getCompileJavaTaskName()).dependsOn(t.getPath());
 				t.doLast(t2 -> {
+					if(codeGenerator.getGeneratorJars() == null) return;
 					URL[] urls = Arrays.stream(codeGenerator.getGeneratorJars()).map(c -> {
 						try {
 							return new URL(c.getAbsolutePath());
@@ -45,7 +50,16 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 					Reflections reflections = new Reflections(new ConfigurationBuilder().addClassLoader(loader)
 							.addScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false), new ResourcesScanner()));
 					Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(CodeGenerator.class);
-					
+
+					ProjectContext context = new ProjectContext(project.getRootDir(), inputDir, outputDirFile);
+
+					typesAnnotatedWith.forEach(c -> {
+						try {
+							new CodeGeneratorExecutor(c).execute(context);
+						} catch (Exception ex) {
+							throw new RuntimeException(ex);
+						}
+					});
 				});
 			});
 		});

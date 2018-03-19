@@ -5,6 +5,8 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
+import org.gradle.api.plugins.JavaPlugin;
+import org.gradle.api.tasks.TaskContainer;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -35,9 +37,11 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 
 	@Test
 	public void taskApplyTest() {
+		test_project.getPlugins().apply(JavaPlugin.class);
 		test_project.getPlugins().apply(CodeGeneratorPlugin.class);
 
-		assertThat(test_project.getTasks().parallelStream().anyMatch(t -> t.getName().equals("MyCoolTask")), is(equalTo(true)));
+		TaskContainer tasks = test_project.getTasks();
+		assertThat(tasks.parallelStream().anyMatch(t -> t.getName().equals("generateCode")), is(equalTo(true)));
 	}
 
 	@Test
@@ -47,6 +51,7 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 		try {
 			FileUtils.write(file, "plugins {\n" +
 					"   id 'CodeGenerator'\n" +
+					"   id 'java'\n" +
 					"}", "UTF-8");
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -62,7 +67,7 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 		BuildResult myCoolTask = GradleRunner.create()
 				.withProjectDir(testProjectDir.getRoot())
 				.withPluginClasspath(collect)
-				.withArguments("MyCoolTask").build();
+				.withArguments("generateCode").build();
 
 		System.out.println(myCoolTask.getOutput());
 	}

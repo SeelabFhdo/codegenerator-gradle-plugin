@@ -1,9 +1,10 @@
 plugins {
 	id "java-gradle-plugin"
 	id "com.gradle.plugin-publish" version "0.9.8"
+	id "maven-publishing"
 }
 
-group 'de.seelab'
+group = 'com.github.SeelabFhdo'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8

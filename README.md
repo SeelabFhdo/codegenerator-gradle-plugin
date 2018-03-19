@@ -2,13 +2,13 @@
 This Gradle plugin offers a generic api for generating code at compile time with gradle. 
 
 [![](https://jitpack.io/v/SeelabFhdo/codegenerator-gradle-plugin.svg)](https://jitpack.io/#SeelabFhdo/codegenerator-gradle-plugin) 
-[![](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin.svg?branch=master)](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin.svg?branch=master)
+[![](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin.svg?branch=master)](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin)
 
 # Usage
 ```gradle
 plugins {
   id 'java'
-  id 'de.seelab.CodeGenerator' version '0.1.2'
+  id 'de.seelab.CodeGenerator' version '0.1.3'
 }
 
 codeGenerator {
@@ -26,7 +26,7 @@ buildscript {
     }
   }
   dependencies {
-    classpath "gradle.plugin.com.github.SeelabFhdo:CodeGeneratorPlugin:0.1.2"
+    classpath "gradle.plugin.com.github.SeelabFhdo:CodeGeneratorPlugin:0.1.3"
   }
 }
 
@@ -48,6 +48,6 @@ allprojects {
 }
 
 dependencies {
-  compile 'com.github.SeelabFhdo:codegenerator-gradle-plugin:0.1.2'
+  compile 'com.github.SeelabFhdo:codegenerator-gradle-plugin:0.1.3'
 }
 ```

@@ -34,7 +34,7 @@ apply plugin: "java"
 apply plugin: "de.seelab.CodeGenerator"
 
 codeGenerator {
-  generatorJars 'libs/my-code-generator.jar'
+  generatorJar 'libs/my-code-generator.jar'
   generatorJar 'liby/my-second-code-generator.jar'
 }
 ```

@@ -39,13 +39,13 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 				project.getTasks().getByName(s.getCompileJavaTaskName()).dependsOn(t.getPath());
 				t.doLast(t2 -> {
 					if(codeGenerator.getGeneratorJars() == null) return;
-					URL[] urls = Arrays.stream(codeGenerator.getGeneratorJars()).map(c -> {
+					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
-							return new URL(c.getAbsolutePath());
+							return c.toURI().toURL();
 						} catch (MalformedURLException e) {
 							throw new RuntimeException(e);
 						}
-					}).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().length]);
+					}).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 					Reflections reflections = new Reflections(new ConfigurationBuilder().addClassLoader(loader)
 							.addScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false), new ResourcesScanner()));

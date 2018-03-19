@@ -32,7 +32,7 @@ public class ProjectContext {
 
 	public void writeOutputFile(String namespace, String filename, byte[] content) throws Exception {
 		File file = new File(new File(outputDir.getAbsolutePath(), namespace.replace(".", "/")).getAbsoluteFile(), filename);
-		boolean mkdirs = file.getParentFile().mkdirs();
+		boolean mkdirs = file.getParentFile().exists() || file.getParentFile().mkdirs();
 		if(!mkdirs) throw new IOException("Cannot create directory " + file.getParent());
 		FileUtils.writeByteArrayToFile(file, content);
 	}

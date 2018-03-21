@@ -16,10 +16,7 @@ import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class CodeGeneratorPlugin implements Plugin<Project> {
@@ -42,11 +39,14 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 
 					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
-							return new File(project.getRootDir().getAbsolutePath(), c.getPath()).toURI().toURL();
+							File file = new File(project.getRootDir().getAbsolutePath(), c.getPath());
+							if(file.exists())
+								return file.toURI().toURL();
+							return null;
 						} catch (MalformedURLException e) {
 							throw new RuntimeException(e);
 						}
-					}).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
+					}).filter(Objects::nonNull).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 					Thread.currentThread().setContextClassLoader(loader);
 					Collection<URL> reflectionUrls = new ArrayList<>(ClasspathHelper.forClassLoader(loader));

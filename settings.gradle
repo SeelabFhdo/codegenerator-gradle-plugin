@@ -1,2 +1,3 @@
 rootProject.name = 'CodeGeneratorPlugin'
 
+include "test-generator"

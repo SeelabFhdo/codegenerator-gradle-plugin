@@ -6,11 +6,14 @@ import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Getter(AccessLevel.PACKAGE)
 public class CodeGeneratorConfiguration {
 	private List<File> generatorJars = new ArrayList<>();
+	private Map<String, Object> configurationValues = new HashMap<>();
 
 	/**
 	 * Add files to generator jars
@@ -26,5 +29,9 @@ public class CodeGeneratorConfiguration {
 	 */
 	public void generatorJar(String filename) {
 		generatorJars.add(new File(filename));
+	}
+
+	public void param(String key, Object value) {
+		configurationValues.put(key, value);
 	}
 }

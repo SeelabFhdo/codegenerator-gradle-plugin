@@ -8,9 +8,7 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Getter
@@ -20,6 +18,9 @@ public class ProjectContext {
 	private File rootDir;
 	private File inputDir;
 	private File outputDir;
+
+	@Getter(AccessLevel.PACKAGE)
+	private Map<String, Object> configurationValues;
 
 	public String getNamespaceFromFile(File file) {
 		String absolutePath = file.getAbsolutePath();
@@ -76,6 +77,21 @@ public class ProjectContext {
 	}
 
 	private File buildFileFromParts(File root, String namespace, String filename) {
-		return new File(root, buildFileFromParts(namespace, filename).getAbsolutePath());
+		return new File(root, buildFileFromParts(namespace, filename).getPath());
+	}
+
+	public boolean configurationExists(String key) {
+		return configurationValues.containsKey(key);
+	}
+
+	public Object getConfigurationValue(String key) {
+		return configurationValues.get(key);
+	}
+
+	public <T> T getConfigurationValueAs(String key, Class<T> clazz) {
+		Object data = configurationValues.get(key);
+		if(clazz.isAssignableFrom(data.getClass()))
+			return (T) data;
+		throw new RuntimeException("Could not transform value of type " + data.getClass().getCanonicalName() + " to " + clazz.getCanonicalName());
 	}
 }

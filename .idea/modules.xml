@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/CodeGeneratorPlugin.iml" filepath="$PROJECT_DIR$/.idea/modules/CodeGeneratorPlugin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test-generator/test-generator.iml" filepath="$PROJECT_DIR$/.idea/modules/test-generator/test-generator.iml" />
     </modules>
   </component>
 </project>

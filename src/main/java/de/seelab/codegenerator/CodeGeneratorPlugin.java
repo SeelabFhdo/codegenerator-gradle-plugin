@@ -7,9 +7,7 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.scanners.*;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
@@ -41,7 +39,7 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			project.getTasks().create(taskName, t -> {
 				project.getTasks().getByName(s.getCompileJavaTaskName()).dependsOn(t.getPath());
 				t.doLast(t2 -> {
-					if(codeGenerator.getGeneratorJars() == null) return;
+
 					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
 							return new File(project.getRootDir().getAbsolutePath(), c.getPath()).toURI().toURL();
@@ -50,13 +48,18 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 						}
 					}).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
+					Thread.currentThread().setContextClassLoader(loader);
 					Collection<URL> reflectionUrls = new ArrayList<>(ClasspathHelper.forClassLoader(loader));
-					reflectionUrls.addAll(ClasspathHelper.forClassLoader(loader.getParent()));
-					Reflections reflections = new Reflections(new ConfigurationBuilder().addClassLoader(loader)
-							.addScanners(new TypeAnnotationsScanner(), new SubTypesScanner(false)).setUrls(reflectionUrls));
+					reflectionUrls.addAll(ClasspathHelper.forClassLoader(Thread.currentThread().getContextClassLoader()));
+					ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+					configurationBuilder.setClassLoaders(new ClassLoader[] { loader, Thread.currentThread().getContextClassLoader() });
+					configurationBuilder.setScanners(new SubTypesScanner(false), new TypeAnnotationsScanner(),
+							new ResourcesScanner());
+					configurationBuilder.setUrls(reflectionUrls);
+					Reflections reflections = new Reflections(configurationBuilder);
 					Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(CodeGenerator.class);
 
-					ProjectContext context = new ProjectContext(project.getRootDir(), inputDir, outputDirFile);
+					ProjectContext context = new ProjectContext(project.getRootDir(), inputDir, outputDirFile, codeGenerator.getConfigurationValues());
 
 					typesAnnotatedWith.forEach(c -> {
 						try {

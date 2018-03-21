@@ -1,6 +1,9 @@
 package de.seelab.codegenerator.test;
 
 import de.seelab.codegenerator.CodeGeneratorPlugin;
+import de.seelab.codegenerator.Generator;
+import de.seelab.codegenerator.ProjectContext;
+import de.seelab.codegenerator.annotations.CodeGenerator;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
@@ -14,6 +17,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -41,17 +45,15 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 		File file = createFile("build.gradle");
 
 		try {
-			URL resource = Thread.currentThread().getContextClassLoader().getResource("test-code-gen-1.0-SNAPSHOT.jar");
-			if(resource == null) throw new Exception("File not found!");
-			FileUtils.writeByteArrayToFile(new File(file.getParent(), "test-code-gen-1.0-SNAPSHOT.jar"), FileUtils.readFileToByteArray(new File(resource.toURI())));
+			File resource = new File(Objects.requireNonNull(Thread.currentThread().getContextClassLoader().getResource("test-generator.jar")).toURI());
+			FileUtils.copyFile(resource, new File(file.getParentFile(), "test-generator.jar"));
 			String fileContent = "plugins {\n" +
 					"   id 'java'\n" +
 					"   id 'de.seelab.CodeGenerator'\n" +
 					"}\n" +
-					"\n" +
 					"codeGenerator {\n" +
-					"   generatorJar 'test-code-gen-1.0-SNAPSHOT.jar'\n" +
-					"}";
+					"   generatorJar 'test-generator.jar'\n" +
+					"}\n";
 			FileUtils.write(file, fileContent, "UTF-8");
 
 		} catch (Exception e) {
@@ -63,7 +65,9 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 				.withDebug(true)
 				.withArguments("generateCode", "--stacktrace").build();
 
+		System.out.println(myCoolTask.getOutput());
+		System.out.println(file.getAbsolutePath());
 		assertThat(myCoolTask.task(":generateCode").getOutcome(), is(equalTo(TaskOutcome.SUCCESS)));
-		assertThat(new File(file.getParent(), "build/generated-src/generator/main/io/freefair/test/TestClass").exists(), is(equalTo(true)));
+		assertThat(new File(file.getParentFile(), "build/generated-src/generator/main/de/seelab/codegenerator/test/TestClass.java").exists(), is(equalTo(true)));
 	}
 }

@@ -25,8 +25,8 @@ dependencies {
 gradlePlugin {
 	plugins {
 		CodeGenerator {
-			id = "de.seelab.CodeGenerator"
-			implementationClass = "CodeGeneratorPlugin"
+			id = "de.fhdo.seelab.CodeGenerator"
+			implementationClass = "de.fhdo.seelab.codegenerator.CodeGeneratorPlugin"
 		}
 	}
 }
@@ -36,7 +36,7 @@ pluginBundle {
 	vcsUrl = 'https://github.com/seelabfhdo/codegenerator-gradle-plugin'
 	plugins {
 		CodeGenerator {
-			id = "de.seelab.CodeGenerator"
+			id = "de.fhdo.seelab.CodeGenerator"
 			displayName = "Code Generator Plugin"
 			description = "Plugin for custom code generation processes"
 			tags = ['code', 'generation', 'codegeneration', 'generate']

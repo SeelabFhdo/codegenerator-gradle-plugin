@@ -45,7 +45,7 @@ public class CodeGeneratorPluginTests extends AbstractPluginTest {
 			FileUtils.copyFile(resource, new File(file.getParentFile(), "test-generator.jar"));
 			String fileContent = "plugins {\n" +
 					"   id 'java'\n" +
-					"   id 'de.seelab.CodeGenerator'\n" +
+					"   id 'de.fhdo.seelab.CodeGenerator'\n" +
 					"}\n" +
 					"codeGenerator {\n" +
 					"   generatorJar 'test-generator.jar'\n" +

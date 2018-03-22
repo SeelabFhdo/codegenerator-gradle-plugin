@@ -1,4 +1,4 @@
-package de.seelab.codegenerator;
+package de.fhdo.seelab.codegenerator;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

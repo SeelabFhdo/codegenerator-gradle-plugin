@@ -1,8 +1,6 @@
-package de.seelab.codegenerator;
+package de.fhdo.seelab.codegenerator;
 
-import de.seelab.codegenerator.annotations.CodeGenerator;
-import groovy.lang.Closure;
-import org.gradle.api.DefaultTask;
+import de.fhdo.seelab.codegenerator.annotations.CodeGenerator;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginConvention;
@@ -12,7 +10,6 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;

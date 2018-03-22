@@ -1,4 +1,4 @@
-package de.seelab.codegenerator;
+package de.fhdo.seelab.codegenerator;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

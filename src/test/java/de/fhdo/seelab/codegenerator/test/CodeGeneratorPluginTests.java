@@ -1,9 +1,6 @@
-package de.seelab.codegenerator.test;
+package de.fhdo.seelab.codegenerator.test;
 
-import de.seelab.codegenerator.CodeGeneratorPlugin;
-import de.seelab.codegenerator.Generator;
-import de.seelab.codegenerator.ProjectContext;
-import de.seelab.codegenerator.annotations.CodeGenerator;
+import de.fhdo.seelab.codegenerator.CodeGeneratorPlugin;
 import org.apache.commons.io.FileUtils;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPlugin;
@@ -16,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.URL;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.*;

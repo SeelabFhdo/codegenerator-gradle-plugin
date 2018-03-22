@@ -1,8 +1,8 @@
-package de.seelab.codegenerator.test;
+package de.fhdo.seelab.codegenerator.test;
 
-import de.seelab.codegenerator.Generator;
-import de.seelab.codegenerator.ProjectContext;
-import de.seelab.codegenerator.annotations.CodeGenerator;
+import de.fhdo.seelab.codegenerator.Generator;
+import de.fhdo.seelab.codegenerator.ProjectContext;
+import de.fhdo.seelab.codegenerator.annotations.CodeGenerator;
 
 @CodeGenerator
 public class TestCodeGenerator implements Generator {

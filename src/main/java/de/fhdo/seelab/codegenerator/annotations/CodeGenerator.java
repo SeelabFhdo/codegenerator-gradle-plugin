@@ -1,4 +1,4 @@
-package de.seelab.codegenerator.annotations;
+package de.fhdo.seelab.codegenerator.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

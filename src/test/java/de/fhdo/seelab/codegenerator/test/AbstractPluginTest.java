@@ -1,4 +1,4 @@
-package de.seelab.codegenerator.test;
+package de.fhdo.seelab.codegenerator.test;
 
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;

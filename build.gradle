@@ -2,12 +2,14 @@ plugins {
 	id "java-gradle-plugin"
 	id "com.gradle.plugin-publish" version "0.9.8"
 	id "maven"
-	id "com.jfrog.bintray" version "1.7.3"
+	id 'maven-publish'
+	id "com.jfrog.bintray" version "1.8.0"
 }
 
 group = 'com.github.SeelabFhdo'
 
 sourceCompatibility = 1.8
+version "0.2.3"
 
 repositories {
 	jcenter()
@@ -45,8 +47,31 @@ pluginBundle {
 	}
 }
 
+publishing {
+	publications {
+		main(MavenPublication) {
+			from components.java
+			groupId 'de.fhdo.seelab'
+			artifactId 'codegenerator'
+			version '0.2.3'
+		}
+	}
+}
+
 bintray {
 	user = System.getenv('BINTRAY_USER')
 	key = System.getenv('BINTRAY_KEY')
-	configurations = ['archives']
+	publications = ['main']
+	pkg {
+		repo = 'maven'
+		name = "de.fhdo.seelab.CodeGenerator"
+		userOrg = "dfricke"
+		licenses = ["MIT"]
+		vcsUrl = "https://github.com/seelabfhdo/codegenerator-gradle-plugin"
+		version {
+			name = "0.2.3"
+			released = new Date()
+			vcsTag = "0.2.3"
+		}
+	}
 }

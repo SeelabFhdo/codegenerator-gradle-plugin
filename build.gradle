@@ -2,6 +2,7 @@ plugins {
 	id "java-gradle-plugin"
 	id "com.gradle.plugin-publish" version "0.9.8"
 	id "maven"
+	id "com.jfrog.bintray" version "1.7.3"
 }
 
 group = 'com.github.SeelabFhdo'
@@ -42,4 +43,10 @@ pluginBundle {
 			tags = ['code', 'generation', 'codegeneration', 'generate']
 		}
 	}
+}
+
+bintray {
+	user = System.getenv('BINTRAY_USER')
+	key = System.getenv('BINTRAY_KEY')
+	configurations = ['archives']
 }

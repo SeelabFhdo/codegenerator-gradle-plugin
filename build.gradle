@@ -9,7 +9,7 @@ plugins {
 group = 'com.github.SeelabFhdo'
 
 sourceCompatibility = 1.8
-version "0.2.3"
+version "0.2.4"
 
 repositories {
 	jcenter()
@@ -23,6 +23,11 @@ dependencies {
 	testCompile group: 'junit', name: 'junit', version: '4.12'
 	testCompile 'org.hamcrest:hamcrest-all:1.3'
 	compile group: 'commons-io', name: 'commons-io', version: '2.6'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+	classifier = 'sources'
+	from sourceSets.main.allSource
 }
 
 gradlePlugin {
@@ -51,9 +56,10 @@ publishing {
 	publications {
 		main(MavenPublication) {
 			from components.java
+			artifact sourcesJar
 			groupId 'de.fhdo.seelab'
 			artifactId 'codegenerator'
-			version '0.2.3'
+			version project.version
 		}
 	}
 }

@@ -1,5 +1,6 @@
 # Generic code generation plugin for Gradle
 This Gradle plugin offers a generic api for generating code at compile time with gradle. 
+
 [![](https://api.bintray.com/packages/dfricke/maven/de.fhdo.seelab.CodeGenerator/images/download.svg)](https://bintray.com/dfricke/maven/de.fhdo.seelab.CodeGenerator/_latestVersion)
 [![](https://jitpack.io/v/SeelabFhdo/codegenerator-gradle-plugin.svg)](https://jitpack.io/#SeelabFhdo/codegenerator-gradle-plugin) 
 [![](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin.svg?branch=master)](https://travis-ci.org/SeelabFhdo/codegenerator-gradle-plugin)

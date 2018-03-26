@@ -75,9 +75,9 @@ bintray {
 		licenses = ["MIT"]
 		vcsUrl = "https://github.com/seelabfhdo/codegenerator-gradle-plugin"
 		version {
-			name = "0.2.3"
+			name = project.version
 			released = new Date()
-			vcsTag = "0.2.3"
+			vcsTag = project.version
 		}
 	}
 }

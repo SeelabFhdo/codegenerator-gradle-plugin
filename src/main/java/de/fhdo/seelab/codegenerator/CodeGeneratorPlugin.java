@@ -36,7 +36,7 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 
 					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
-							File file = new File(project.getRootDir().getAbsolutePath(), c.getPath());
+							File file = new File(project.getProjectDir().getAbsolutePath(), c.getPath());
 							if(file.exists())
 								return file.toURI().toURL();
 							return null;
@@ -56,7 +56,7 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 					Reflections reflections = new Reflections(configurationBuilder);
 					Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(CodeGenerator.class);
 
-					ProjectContext context = new ProjectContext(project.getRootDir(), inputDir, outputDirFile, codeGenerator.getConfigurationValues());
+					ProjectContext context = new ProjectContext(project.getProjectDir(), inputDir, outputDirFile, codeGenerator.getConfigurationValues());
 
 					typesAnnotatedWith.forEach(c -> {
 						try {

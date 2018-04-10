@@ -9,7 +9,7 @@ plugins {
 group = 'com.github.SeelabFhdo'
 
 sourceCompatibility = 1.8
-version "0.2.4"
+version "${version}"
 
 repositories {
 	jcenter()

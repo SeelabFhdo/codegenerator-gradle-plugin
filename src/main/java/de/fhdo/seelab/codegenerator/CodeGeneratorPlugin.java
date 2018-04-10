@@ -26,7 +26,7 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			String outputDir = project.getBuildDir() + "/generated-src/generator/" + s.getName();
 			File outputDirFile = new File(outputDir);
 			s.getJava().srcDir(outputDirFile);
-			File inputDir = new File(project.getRootDir() + "/src/code-generator/" + s.getName());
+			File inputDir = new File(project.getProjectDir() + "/src/code-generator/" + s.getName());
 			s.getJava().srcDir(inputDir);
 
 			String taskName = s.getTaskName("generate", "Code");

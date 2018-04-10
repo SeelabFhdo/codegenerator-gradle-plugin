@@ -33,17 +33,21 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			project.getTasks().create(taskName, t -> {
 				project.getTasks().getByName(s.getCompileJavaTaskName()).dependsOn(t.getPath());
 				t.doLast(t2 -> {
-
 					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
 						try {
-							File file = new File(project.getProjectDir().getAbsolutePath(), c.getPath());
-							if(file.exists())
+							File file;
+							if (!c.getPath().startsWith("/"))
+								file = new File(project.getProjectDir().getAbsolutePath(), c.getPath());
+							else
+								file = c;
+							if (file.exists())
 								return file.toURI().toURL();
 							return null;
 						} catch (MalformedURLException e) {
 							throw new RuntimeException(e);
 						}
-					}).filter(Objects::nonNull).collect(Collectors.toList()).toArray(new URL[codeGenerator.getGeneratorJars().size()]);
+					}).filter(Objects::nonNull).toArray(URL[]::new);
+
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 					Thread.currentThread().setContextClassLoader(loader);
 					Collection<URL> reflectionUrls = new ArrayList<>(ClasspathHelper.forClassLoader(loader));

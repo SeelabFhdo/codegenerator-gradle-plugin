@@ -1,6 +1,7 @@
 package de.fhdo.seelab.codegenerator;
 
 import de.fhdo.seelab.codegenerator.annotations.CodeGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.plugins.JavaPluginConvention;
@@ -16,6 +17,7 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class CodeGeneratorPlugin implements Plugin<Project> {
 
 	@Override
@@ -26,8 +28,17 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			String outputDir = project.getBuildDir() + "/generated-src/generator/" + s.getName();
 			File outputDirFile = new File(outputDir);
 			s.getJava().srcDir(outputDirFile);
+
+			if(log.isDebugEnabled()) {
+				log.debug("Using output dir " + outputDir);
+			}
+
 			File inputDir = new File(project.getProjectDir() + "/src/code-generator/" + s.getName());
 			s.getJava().srcDir(inputDir);
+
+			if(log.isDebugEnabled()) {
+				log.debug("Using input dir " + inputDir);
+			}
 
 			String taskName = s.getTaskName("generate", "Code");
 			project.getTasks().create(taskName, t -> {
@@ -48,6 +59,10 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 						}
 					}).filter(Objects::nonNull).toArray(URL[]::new);
 
+					if(log.isDebugEnabled()) {
+						log.debug("Found " + urls.length + " urls to scan");
+					}
+
 					ClassLoader loader = new URLClassLoader(urls, Thread.currentThread().getContextClassLoader());
 					Thread.currentThread().setContextClassLoader(loader);
 					Collection<URL> reflectionUrls = new ArrayList<>(ClasspathHelper.forClassLoader(loader));
@@ -60,11 +75,18 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 					Reflections reflections = new Reflections(configurationBuilder);
 					Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(CodeGenerator.class);
 
+					if(log.isDebugEnabled()) {
+						log.debug("Found " + typesAnnotatedWith.size() + " with code generator annotation: ");
+						log.debug(typesAnnotatedWith.stream().map(Class::getCanonicalName).collect(Collectors.joining(",")));
+					}
+
 					ProjectContext context = new ProjectContext(project.getProjectDir(), inputDir, outputDirFile, codeGenerator.getConfigurationValues());
 
 					typesAnnotatedWith.forEach(c -> {
 						try {
+							log.debug("Executing " + c.getCanonicalName() + " ...");
 							new CodeGeneratorExecutor(c).execute(context);
+							log.debug("... Success");
 						} catch (Exception ex) {
 							throw new RuntimeException(ex);
 						}

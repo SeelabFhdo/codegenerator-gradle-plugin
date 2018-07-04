@@ -4,7 +4,11 @@ import de.fhdo.seelab.codegenerator.annotations.CodeGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.ConfigurationContainer;
+import org.gradle.api.file.SourceDirectorySet;
 import org.gradle.api.plugins.JavaPluginConvention;
+import org.gradle.api.tasks.SourceSetContainer;
 import org.reflections.Reflections;
 import org.reflections.scanners.*;
 import org.reflections.util.ClasspathHelper;
@@ -16,6 +20,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 public class CodeGeneratorPlugin implements Plugin<Project> {
@@ -24,7 +29,9 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 	public void apply(Project project) {
 		CodeGeneratorConfiguration codeGenerator = project.getExtensions().create("codeGenerator", CodeGeneratorConfiguration.class);
 
-		project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().all(s -> {
+		JavaPluginConvention plugin = project.getConvention().getPlugin(JavaPluginConvention.class);
+		SourceSetContainer sourceSets = plugin.getSourceSets();
+		sourceSets.all(s -> {
 			String outputDir = project.getBuildDir() + "/generated-src/generator/" + s.getName();
 			File outputDirFile = new File(outputDir);
 			s.getJava().srcDir(outputDirFile);
@@ -44,7 +51,14 @@ public class CodeGeneratorPlugin implements Plugin<Project> {
 			project.getTasks().create(taskName, t -> {
 				project.getTasks().getByName(s.getCompileJavaTaskName()).dependsOn(t.getPath());
 				t.doLast(t2 -> {
-					URL[] urls = codeGenerator.getGeneratorJars().stream().map(c -> {
+					Set<File> resolve = Collections.singleton(null);
+					try {
+						Configuration byName = project.getConfigurations().getByName("compileOnly");
+						resolve = byName.resolve();
+					} catch (Exception ex) {
+						log.debug("Error while resolving compileOnly", ex);
+					}
+					URL[] urls = Stream.concat(codeGenerator.getGeneratorJars().stream(), resolve.stream()).map(c -> {
 						try {
 							File file;
 							if (!c.getPath().startsWith("/"))
